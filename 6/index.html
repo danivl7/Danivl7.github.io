@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday!</title>
+  <style>
+    body { 
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      font-family: 'Arial', sans-serif; 
+      text-align: center; 
+      padding: 50px; 
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 40px;
+      color: #d63384;
+      margin-bottom: 20px;
+    }
+    #message {
+      font-size: 20px;
+      color: #333;
+      margin-top: 30px;
+      line-height: 1.8;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    button {
+      padding: 12px 25px;
+      background: #d63384;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      background: #a61e64;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎂 Happy Birthday Nadia! 🎂</h1>
+
+  <button onclick="playMusic()">Play Music 🎵</button>
+  <button onclick="showMessage()">Show Message ✨</button>
+
+  <p id="message"></p>
+  <audio id="song" src="https://cdn.pixabay.com/download/audio/2023/03/15/audio_5c97b7ffde.mp3?filename=happy-birthday-to-you-246263.mp3"></audio>  
+
+  <canvas id="confetti"></canvas>
+
+  <script>
+    // Play Music
+    function playMusic() {
+      const song = document.getElementById("song");
+      song.play().catch(() => {
+        alert("Music blocked! Tekan sekali lagi pada butang 🎵");
+      });
+    }
+
+    // Show Message + Confetti
+    function showMessage() {
+      startConfetti();
+      typeWriter("Happy Birthday, my past. Wishing you nothing but the best in life. No matter where time takes us, a part of me will always remember the moments we shared. Maybe one day, under the same sky, we’ll look at the stars again.");
+    }
+
+    // Typewriter Effect
+    function typeWriter(text) {
+      let i = 0;
+      document.getElementById("message").innerHTML = "";
+      const speed = 60;
+      function typing() {
+        if (i < text.length) {
+          document.getElementById("message").innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+
+    // Confetti Animation
+    function startConfetti() {
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confetti = [];
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 100,
+          color: "hsl(" + Math.random() * 360 + ",100%,50%)"
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confetti.forEach(c => {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
+          ctx.fillStyle = c.color;
+          ctx.fill();
+        });
+        update();
+      }
+
+      function update() {
+        confetti.forEach(c => {
+          c.y += Math.cos(c.d) + 1 + c.r/2;
+          c.x += Math.sin(c.d);
+          if (c.y > canvas.height) {
+            c.x = Math.random() * canvas.width;
+            c.y = -10;
+          }
+        });
+      }
+
+      (function animate() {
+        draw();
+        requestAnimationFrame(animate);
+      })();
+    }
+  </script>
+</body>
+</html>
